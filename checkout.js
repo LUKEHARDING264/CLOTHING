@@ -88,8 +88,8 @@ form.addEventListener('submit', async (event) => {
             body: JSON.stringify({
                 line_items: lineItems,
                 mode: 'payment',
-                success_url: `${window.location.origin}/success.html`,
-                cancel_url: `${window.location.origin}/cart.html`,
+                success_url: `https://your-site-url.netlify.app/success.html`,
+                cancel_url: `https://your-site-url.netlify.app/cart.html`,
                 customer_email: document.getElementById('email').value,
             }),
         });
