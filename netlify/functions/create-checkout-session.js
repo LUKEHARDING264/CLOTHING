@@ -4,6 +4,13 @@ exports.handler = async (event) => {
     try {
         const { line_items, success_url, cancel_url, customer_email } = JSON.parse(event.body);
 
+        console.log('Creating checkout session with:', {
+            line_items,
+            success_url,
+            cancel_url,
+            customer_email
+        });
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             line_items,
@@ -38,6 +45,8 @@ exports.handler = async (event) => {
             ],
         });
 
+        console.log('Session created:', session.id);
+
         return {
             statusCode: 200,
             headers: {
@@ -48,6 +57,7 @@ exports.handler = async (event) => {
             body: JSON.stringify({ id: session.id }),
         };
     } catch (error) {
+        console.error('Error creating checkout session:', error);
         return {
             statusCode: 500,
             headers: {
