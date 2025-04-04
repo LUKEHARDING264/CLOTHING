@@ -1,10 +1,15 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
+    // Only allow POST
+    if (event.httpMethod !== 'POST') {
+        return { statusCode: 405, body: 'Method Not Allowed' };
+    }
+
     try {
         const { line_items, success_url, cancel_url, customer_email } = JSON.parse(event.body);
 
-        console.log('Creating checkout session with:', {
+        console.log('Creating checkout session with data:', {
             line_items,
             success_url,
             cancel_url,
@@ -21,51 +26,23 @@ exports.handler = async (event) => {
             shipping_address_collection: {
                 allowed_countries: ['US'],
             },
-            shipping_options: [
-                {
-                    shipping_rate_data: {
-                        type: 'fixed_amount',
-                        fixed_amount: {
-                            amount: 500, // $5.00
-                            currency: 'usd',
-                        },
-                        display_name: 'Standard shipping',
-                        delivery_estimate: {
-                            minimum: {
-                                unit: 'business_day',
-                                value: 5,
-                            },
-                            maximum: {
-                                unit: 'business_day',
-                                value: 7,
-                            },
-                        },
-                    },
-                },
-            ],
+            billing_address_collection: 'required',
+            metadata: {
+                website: 'eternalclothing.netlify.app'
+            }
         });
 
-        console.log('Session created:', session.id);
+        console.log('Session created successfully:', session.id);
 
         return {
             statusCode: 200,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-            },
-            body: JSON.stringify({ id: session.id }),
+            body: JSON.stringify({ id: session.id })
         };
     } catch (error) {
         console.error('Error creating checkout session:', error);
         return {
             statusCode: 500,
-            headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-            },
-            body: JSON.stringify({ error: error.message }),
+            body: JSON.stringify({ error: error.message })
         };
     }
 }; 
