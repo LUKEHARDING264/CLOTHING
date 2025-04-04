@@ -1,76 +1,67 @@
 // Initialize Stripe
-const stripe = Stripe('your_publishable_key'); // Replace with your Stripe publishable key
-const elements = stripe.elements();
-
-// Create card Element and mount it
-const card = elements.create('card', {
-    style: {
-        base: {
-            color: '#ffffff',
-            fontFamily: '"Orbitron", sans-serif',
-            fontSize: '16px',
-            '::placeholder': {
-                color: '#aab7c4'
-            },
-            backgroundColor: 'transparent'
-        },
-        invalid: {
-            color: '#ff0000',
-            iconColor: '#ff0000'
-        }
-    }
-});
-card.mount('#card-element');
+const stripe = Stripe('pk_test_your_actual_key_here'); // Replace with your actual publishable key
 
 // Handle form submission
 const form = document.getElementById('payment-form');
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
     
-    const {token, error} = await stripe.createToken(card);
-    
-    if (error) {
-        const errorElement = document.getElementById('card-errors');
-        errorElement.textContent = error.message;
-    } else {
-        // Send token to your server
-        submitOrder(token.id);
-    }
-});
-
-// Handle real-time validation errors
-card.addEventListener('change', ({error}) => {
-    const displayError = document.getElementById('card-errors');
-    if (error) {
-        displayError.textContent = error.message;
-    } else {
-        displayError.textContent = '';
-    }
-});
-
-// Function to submit order to your server
-async function submitOrder(token) {
     const submitButton = document.querySelector('.submit-button');
     submitButton.disabled = true;
     submitButton.querySelector('#button-text').textContent = 'Processing...';
     
     try {
-        // Here you would typically send the order to your server
-        // For now, we'll simulate a successful order
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Get cart items
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
         
-        // Clear cart
-        localStorage.removeItem('cart');
+        // Create line items for Stripe Checkout
+        const lineItems = cart.map(item => ({
+            price_data: {
+                currency: 'usd',
+                product_data: {
+                    name: item.name,
+                    images: [item.image],
+                },
+                unit_amount: item.price * 100, // Convert to cents
+            },
+            quantity: item.quantity,
+        }));
+
+        // Create checkout session
+        const response = await fetch('/create-checkout-session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                line_items: lineItems,
+                mode: 'payment',
+                success_url: `${window.location.origin}/success.html`,
+                cancel_url: `${window.location.origin}/cart.html`,
+                customer_email: document.getElementById('email').value,
+                shipping_address_collection: {
+                    allowed_countries: ['US'],
+                },
+            }),
+        });
+
+        const session = await response.json();
         
-        // Redirect to success page
-        window.location.href = 'success.html';
+        // Redirect to Stripe Checkout
+        const result = await stripe.redirectToCheckout({
+            sessionId: session.id
+        });
+
+        if (result.error) {
+            throw new Error(result.error.message);
+        }
     } catch (error) {
         console.error('Error:', error);
+        document.getElementById('card-errors').textContent = 'An error occurred. Please try again.';
         submitButton.disabled = false;
         submitButton.querySelector('#button-text').textContent = 'PAY NOW';
-        document.getElementById('card-errors').textContent = 'An error occurred. Please try again.';
     }
-}
+});
 
 // Display cart items in order summary
 function displayCheckoutItems() {
