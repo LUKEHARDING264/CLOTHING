@@ -80,7 +80,7 @@ form.addEventListener('submit', async (event) => {
         console.log('Sending request to create checkout session...');
         
         // Create checkout session
-        const response = await fetch('/create-checkout-session', {
+        const response = await fetch('/.netlify/functions/create-checkout-session', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
