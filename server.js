@@ -11,7 +11,7 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    origin: '*', // Allow all origins in production
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type'],
 }));
@@ -95,6 +95,11 @@ app.post('/webhook', express.raw({type: 'application/json'}), async (req, res) =
     }
 
     res.json({received: true});
+});
+
+// Handle 404 errors
+app.use((req, res) => {
+    res.status(404).json({ error: 'Not Found' });
 });
 
 const PORT = process.env.PORT || 3000;
