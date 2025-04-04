@@ -60,7 +60,7 @@ form.addEventListener('submit', async (event) => {
                 product_data: {
                     name: item.name,
                 },
-                unit_amount: item.price * 100, // Convert to cents
+                unit_amount: Math.round(item.price * 100), // Convert to cents and ensure it's an integer
             },
             quantity: item.quantity,
         }));

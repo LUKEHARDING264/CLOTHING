@@ -11,7 +11,7 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-    origin: '*', // Allow all origins in production
+    origin: ['https://eternalclothing.netlify.app', 'http://localhost:3000'],
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type'],
 }));
@@ -22,48 +22,22 @@ app.use(express.static('.'));
 // Create checkout session
 app.post('/create-checkout-session', async (req, res) => {
     try {
-        if (!process.env.STRIPE_SECRET_KEY) {
-            throw new Error('Stripe secret key is not configured');
-        }
-
-        console.log('Request body:', req.body);
-        console.log('Creating checkout session with items:', req.body.line_items);
+        console.log('Creating checkout session with data:', req.body);
         
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             line_items: req.body.line_items,
             mode: 'payment',
-            success_url: `${req.body.success_url}`,
+            success_url: req.body.success_url,
             cancel_url: req.body.cancel_url,
             customer_email: req.body.customer_email,
             shipping_address_collection: {
                 allowed_countries: ['US'],
             },
-            shipping_options: [
-                {
-                    shipping_rate_data: {
-                        type: 'fixed_amount',
-                        fixed_amount: {
-                            amount: 500, // $5.00
-                            currency: 'usd',
-                        },
-                        display_name: 'Standard shipping',
-                        delivery_estimate: {
-                            minimum: {
-                                unit: 'business_day',
-                                value: 5,
-                            },
-                            maximum: {
-                                unit: 'business_day',
-                                value: 7,
-                            },
-                        },
-                    },
-                },
-            ],
+            billing_address_collection: 'required',
         });
 
-        console.log('Session created:', session.id);
+        console.log('Session created successfully:', session.id);
         res.json({ id: session.id });
     } catch (error) {
         console.error('Error creating checkout session:', error);
@@ -72,29 +46,30 @@ app.post('/create-checkout-session', async (req, res) => {
 });
 
 // Handle webhook events
-app.post('/webhook', express.raw({type: 'application/json'}), async (req, res) => {
+app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     const sig = req.headers['stripe-signature'];
+    const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
     let event;
 
     try {
-        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+        event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
     } catch (err) {
-        res.status(400).send(`Webhook Error: ${err.message}`);
-        return;
+        console.error('Webhook signature verification failed:', err.message);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
     // Handle the event
     switch (event.type) {
         case 'checkout.session.completed':
             const session = event.data.object;
-            console.log('Checkout session completed!');
-            // Here you can add code to update your database, send emails, etc.
+            console.log('Payment successful for session:', session.id);
             break;
         default:
             console.log(`Unhandled event type ${event.type}`);
     }
 
-    res.json({received: true});
+    res.json({ received: true });
 });
 
 // Handle 404 errors
