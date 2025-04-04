@@ -1,20 +1,15 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-exports.handler = async (event, context) => {
-    // Only allow POST
+exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: 'Method Not Allowed' };
+        return {
+            statusCode: 405,
+            body: JSON.stringify({ error: 'Method not allowed' })
+        };
     }
 
     try {
         const { line_items, success_url, cancel_url, customer_email } = JSON.parse(event.body);
-
-        console.log('Creating checkout session with data:', {
-            line_items,
-            success_url,
-            cancel_url,
-            customer_email
-        });
 
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
@@ -26,23 +21,20 @@ exports.handler = async (event, context) => {
             shipping_address_collection: {
                 allowed_countries: ['US'],
             },
-            billing_address_collection: 'required',
-            metadata: {
-                website: 'eternalclothing.netlify.app'
-            }
+            billing_address_collection: 'required'
         });
-
-        console.log('Session created successfully:', session.id);
 
         return {
             statusCode: 200,
             body: JSON.stringify({ id: session.id })
         };
     } catch (error) {
-        console.error('Error creating checkout session:', error);
+        console.error('Stripe session creation error:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: error.message })
+            body: JSON.stringify({ 
+                error: error.message || 'Failed to create checkout session'
+            })
         };
     }
 }; 

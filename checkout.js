@@ -44,15 +44,12 @@ form.addEventListener('submit', async (event) => {
     submitButton.querySelector('#button-text').textContent = 'Processing...';
     
     try {
-        // Get cart items
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         
         if (cart.length === 0) {
             throw new Error('Your cart is empty');
         }
 
-        console.log('Creating checkout session with items:', cart);
-        
         // Create line items for Stripe Checkout
         const lineItems = cart.map(item => ({
             price_data: {
@@ -60,7 +57,7 @@ form.addEventListener('submit', async (event) => {
                 product_data: {
                     name: item.name,
                 },
-                unit_amount: Math.round(item.price * 100), // Convert to cents and ensure it's an integer
+                unit_amount: Math.round(item.price * 100),
             },
             quantity: item.quantity,
         }));
@@ -72,48 +69,41 @@ form.addEventListener('submit', async (event) => {
                 product_data: {
                     name: 'Standard Shipping',
                 },
-                unit_amount: 500, // $5.00
+                unit_amount: 500,
             },
             quantity: 1,
         });
 
-        console.log('Sending request to create checkout session...');
-        
-        // Create checkout session using Netlify Function
+        // Create checkout session
         const response = await fetch('/.netlify/functions/create-checkout-session', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
             },
             body: JSON.stringify({
                 line_items: lineItems,
-                mode: 'payment',
-                success_url: `https://eternalclothing.netlify.app/success.html`,
-                cancel_url: `https://eternalclothing.netlify.app/cart.html`,
+                success_url: 'https://eternalclothing.netlify.app/success.html',
+                cancel_url: 'https://eternalclothing.netlify.app/cart.html',
                 customer_email: document.getElementById('email').value,
             }),
         });
 
+        const data = await response.json();
+        
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to create checkout session');
+            throw new Error(data.error || 'An error occurred while creating the checkout session');
         }
 
-        const session = await response.json();
-        console.log('Checkout session created:', session);
-        
         // Redirect to Stripe Checkout
-        console.log('Redirecting to Stripe Checkout...');
         const result = await stripe.redirectToCheckout({
-            sessionId: session.id
+            sessionId: data.id
         });
 
         if (result.error) {
             throw new Error(result.error.message);
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Checkout Error:', error);
         const errorElement = document.getElementById('card-errors');
         errorElement.textContent = error.message || 'An error occurred. Please try again.';
         errorElement.style.display = 'block';
