@@ -47,7 +47,7 @@ exports.handler = async (event) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ id: session.id })
+            body: JSON.stringify({ url: session.url })
         };
     } catch (error) {
         console.error('Stripe session creation error:', error);

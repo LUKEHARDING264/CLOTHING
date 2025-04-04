@@ -96,13 +96,7 @@ form.addEventListener('submit', async (event) => {
         }
 
         // Redirect to Stripe Checkout
-        const result = await stripe.redirectToCheckout({
-            sessionId: data.id
-        });
-
-        if (result.error) {
-            throw new Error(result.error.message);
-        }
+        window.location.href = data.url;
     } catch (error) {
         console.error('Checkout Error:', error);
         const errorElement = document.getElementById('card-errors');
