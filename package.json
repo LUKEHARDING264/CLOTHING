@@ -1,15 +1,16 @@
 {
-  "name": "dead-by-dawn-store",
+  "name": "clothing-website",
   "version": "1.0.0",
-  "description": "E-commerce store for Dead By Dawn",
+  "description": "Clothing website with Stripe checkout",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build": "echo 'No build step required'"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "stripe": "^12.18.0"
+    "dotenv": "^10.0.0",
+    "stripe": "^8.176.0"
   }
 }

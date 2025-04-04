@@ -1,10 +1,15 @@
 [build]
-  command = "echo 'No build step required'"
+  command = "npm install && npm run build"
   publish = "."
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/create-checkout-session"
+  to = "/.netlify/functions/create-checkout-session"
   status = 200
 
 [build.environment]
