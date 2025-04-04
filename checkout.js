@@ -80,10 +80,11 @@ form.addEventListener('submit', async (event) => {
         console.log('Sending request to create checkout session...');
         
         // Create checkout session
-        const response = await fetch('/.netlify/functions/create-checkout-session', {
+        const response = await fetch('https://eternalclothing.netlify.app/.netlify/functions/create-checkout-session', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: JSON.stringify({
                 line_items: lineItems,

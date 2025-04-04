@@ -9,11 +9,22 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 
+// Security headers middleware
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    res.setHeader('Content-Security-Policy', "default-src 'self' https://*.stripe.com; script-src 'self' https://*.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.stripe.com;");
+    next();
+});
+
 // Enable CORS for all routes
 app.use(cors({
     origin: ['https://eternalclothing.netlify.app', 'http://localhost:3000'],
     methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type'],
+    allowedHeaders: ['Content-Type', 'Accept'],
+    credentials: true,
 }));
 
 app.use(express.json());
@@ -35,6 +46,9 @@ app.post('/create-checkout-session', async (req, res) => {
                 allowed_countries: ['US'],
             },
             billing_address_collection: 'required',
+            metadata: {
+                website: 'eternalclothing.netlify.app'
+            }
         });
 
         console.log('Session created successfully:', session.id);
