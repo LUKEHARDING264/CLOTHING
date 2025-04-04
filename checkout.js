@@ -82,6 +82,7 @@ form.addEventListener('submit', async (event) => {
             },
             body: JSON.stringify({
                 line_items: lineItems,
+                mode: 'payment',
                 success_url: 'https://eternalclothing.netlify.app/success.html',
                 cancel_url: 'https://eternalclothing.netlify.app/cart.html',
                 customer_email: document.getElementById('email').value,
