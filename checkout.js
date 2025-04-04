@@ -1,5 +1,38 @@
 // Initialize Stripe
-const stripe = Stripe('pk_test_your_actual_key_here'); // Replace with your actual publishable key
+const stripe = Stripe('pk_test_51R9wfTFJFbllHThtN1VRMV6Eb78ur9LPNPB1hRDiAwJS5cak7LZ93hYRfZ5z4bh4pkxQv7Czpwfwr6hspEU3qat100o71kebrW');
+
+// Display cart items in order summary
+function displayCheckoutItems() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const summaryItems = document.querySelector('.summary-items');
+    
+    if (cart.length === 0) {
+        window.location.href = 'cart.html';
+        return;
+    }
+    
+    let subtotal = 0;
+    summaryItems.innerHTML = cart.map(item => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        return `
+            <div class="checkout-item">
+                <div class="checkout-item-details">
+                    <h3>${item.name}</h3>
+                    <p>Size: ${item.size}</p>
+                    <p>Quantity: ${item.quantity}</p>
+                    <p>$${itemTotal.toFixed(2)}</p>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    const shipping = 5.00;
+    const total = subtotal + shipping;
+    
+    document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+    document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+}
 
 // Handle form submission
 const form = document.getElementById('payment-form');
@@ -14,19 +47,38 @@ form.addEventListener('submit', async (event) => {
         // Get cart items
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         
+        if (cart.length === 0) {
+            throw new Error('Your cart is empty');
+        }
+
+        console.log('Creating checkout session with items:', cart);
+        
         // Create line items for Stripe Checkout
         const lineItems = cart.map(item => ({
             price_data: {
                 currency: 'usd',
                 product_data: {
                     name: item.name,
-                    images: [item.image],
                 },
                 unit_amount: item.price * 100, // Convert to cents
             },
             quantity: item.quantity,
         }));
 
+        // Add shipping cost
+        lineItems.push({
+            price_data: {
+                currency: 'usd',
+                product_data: {
+                    name: 'Standard Shipping',
+                },
+                unit_amount: 500, // $5.00
+            },
+            quantity: 1,
+        });
+
+        console.log('Sending request to create checkout session...');
+        
         // Create checkout session
         const response = await fetch('/create-checkout-session', {
             method: 'POST',
@@ -39,15 +91,19 @@ form.addEventListener('submit', async (event) => {
                 success_url: `${window.location.origin}/success.html`,
                 cancel_url: `${window.location.origin}/cart.html`,
                 customer_email: document.getElementById('email').value,
-                shipping_address_collection: {
-                    allowed_countries: ['US'],
-                },
             }),
         });
 
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to create checkout session');
+        }
+
         const session = await response.json();
+        console.log('Checkout session created:', session);
         
         // Redirect to Stripe Checkout
+        console.log('Redirecting to Stripe Checkout...');
         const result = await stripe.redirectToCheckout({
             sessionId: session.id
         });
@@ -57,40 +113,13 @@ form.addEventListener('submit', async (event) => {
         }
     } catch (error) {
         console.error('Error:', error);
-        document.getElementById('card-errors').textContent = 'An error occurred. Please try again.';
+        const errorElement = document.getElementById('card-errors');
+        errorElement.textContent = error.message || 'An error occurred. Please try again.';
+        errorElement.style.display = 'block';
         submitButton.disabled = false;
         submitButton.querySelector('#button-text').textContent = 'PAY NOW';
     }
 });
-
-// Display cart items in order summary
-function displayCheckoutItems() {
-    const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const summaryItems = document.querySelector('.summary-items');
-    
-    if (cart.length === 0) {
-        window.location.href = 'cart.html';
-        return;
-    }
-    
-    let total = 0;
-    summaryItems.innerHTML = cart.map(item => {
-        total += item.price * item.quantity;
-        return `
-            <div class="checkout-item">
-                <div class="checkout-item-details">
-                    <h3>${item.name}</h3>
-                    <p>Size: ${item.size}</p>
-                    <p>Quantity: ${item.quantity}</p>
-                    <p>$${(item.price * item.quantity).toFixed(2)}</p>
-                </div>
-            </div>
-        `;
-    }).join('');
-    
-    document.getElementById('subtotal').textContent = `$${total.toFixed(2)}`;
-    document.getElementById('total').textContent = `$${total.toFixed(2)}`;
-}
 
 // Initialize checkout page
 document.addEventListener('DOMContentLoaded', () => {
