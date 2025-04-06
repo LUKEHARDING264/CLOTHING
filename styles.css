@@ -188,40 +188,15 @@ header {
 
 /* Blood Divider */
 .blood-divider {
-    position: relative;
-    width: 100%;
-    height: 1200px;
-    margin-top: 0;
-    margin-bottom: -200px;
-    z-index: 10;
-    pointer-events: none;
-    overflow: visible;
+    display: none;
 }
 
 .blood-drip-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: rotate(180deg) scaleX(-1);
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+    display: none;
 }
 
 .blood-drip-bottom {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 200px;
-    background-image: url('IMAGES/blood-drip.png');
-    background-size: 100% auto;
-    background-position: bottom center;
-    background-repeat: no-repeat;
-    transform: rotate(180deg);
-    pointer-events: none;
+    display: none;
 }
 
 .section-title {
@@ -246,49 +221,54 @@ header {
     animation: glowLine 2s ease-in-out infinite alternate;
 }
 
+/* Product Grid */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-    max-width: 1200px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    max-width: 900px;
     margin: 0 auto;
-    width: 100%;
+    padding: 20px;
 }
 
 .product-box {
-    aspect-ratio: 1;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
-    text-decoration: none;
-    display: block;
-    cursor: pointer;
+    overflow: visible;
+    transition: all 0.3s ease;
+    background: transparent;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-box img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.3));
 }
 
 .product-box:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+}
+
+.product-box:hover img {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.5));
 }
 
 .product-price {
     position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    color: #fff;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.2rem;
-    padding: 0.5rem 1rem;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
-    backdrop-filter: blur(5px);
-    transition: all 0.3s ease;
-}
-
-.product-box:hover .product-price {
-    background: rgba(255, 0, 0, 0.5);
-    transform: scale(1.05);
+    bottom: -30px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #ff0000;
+    padding: 5px 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 0, 0, 0.5);
 }
 
 /* Upcoming section */
@@ -307,8 +287,8 @@ header {
     left: 0;
     width: 100%;
     height: calc(100% + 200px);
-    background: url('IMAGES/HERO.webp') no-repeat center bottom;
-    background-size: cover;
+    background: url('images/ui.jpg') no-repeat center center;
+    background-size: contain;
     filter: brightness(0.3);
     z-index: 1;
     mask-image: linear-gradient(to top, black 90%, transparent 100%);
@@ -466,8 +446,16 @@ header {
         font-size: 1.2rem;
     }
 
+    .upcoming::before {
+        background: url('images/ui.jpg') no-repeat center center;
+        background-size: contain;
+        filter: brightness(0.3);
+    }
+    
     .upcoming {
         min-height: 120vh;
+        margin-top: 100px;
+        padding-top: 50px;
     }
 }
 
@@ -846,35 +834,52 @@ html {
 }
 
 .product-info {
-    color: #fff;
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-title {
-    font-family: 'Syncopate', sans-serif;
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: #ff0000;
-}
-
-.product-price {
     font-family: 'Orbitron', sans-serif;
-    font-size: 1.8rem;
-    margin-bottom: 2rem;
+    font-size: 2rem;
     color: #fff;
+    margin-bottom: 20px;
 }
 
 .product-description {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.1rem;
+    font-family: 'Share Tech Mono', monospace;
+    color: #fff;
     line-height: 1.6;
-    margin-bottom: 2rem;
-    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 20px;
+}
+
+.product-pricing {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.original-price {
+    color: #fff;
+    text-decoration: line-through;
+    font-size: 1rem;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.product-price {
+    color: #ff0000;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-family: 'Share Tech Mono', monospace;
 }
 
 .product-options {
+    margin-top: auto;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 15px;
 }
 
 .size-select {
@@ -1644,4 +1649,365 @@ input:focus {
     background-color: #cc0000;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+}
+
+/* Computer Interface Styles */
+.computer-container {
+    display: none;
+}
+
+.computer {
+    display: none;
+}
+
+.computer-screen {
+    display: none;
+}
+
+.screen-content {
+    display: none;
+}
+
+.desktop {
+    display: none;
+}
+
+.taskbar {
+    display: none;
+}
+
+.start-button {
+    display: none;
+}
+
+.time {
+    display: none;
+}
+
+.desktop-icons {
+    display: none;
+}
+
+.desktop-icon {
+    display: none;
+}
+
+.desktop-icon img {
+    display: none;
+}
+
+.desktop-icon span {
+    display: none;
+}
+
+.theme-window {
+    display: none;
+}
+
+.window-header {
+    display: none;
+}
+
+.window-title {
+    display: none;
+}
+
+.close-button {
+    display: none;
+}
+
+.window-content {
+    display: none;
+}
+
+#theme-preview {
+    display: none;
+}
+
+.theme-description {
+    display: none;
+}
+
+.theme-description h3 {
+    display: none;
+}
+
+.computer-base {
+    display: none;
+}
+
+/* Floating buttons container */
+.floating-buttons {
+    position: absolute;
+    top: 35%;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 100px;
+    z-index: 10;
+}
+
+/* Button styles */
+.floating-button {
+    display: none;
+}
+
+/* FILE 1 button container */
+.button-container {
+    position: relative;
+    margin: 0 50px;
+}
+
+/* FILE 2 container */
+.file2-container {
+    position: relative;
+    margin: 0 50px;
+}
+
+/* CLASSIFIED container */
+.classified-container {
+    position: relative;
+    margin: 0 50px;
+}
+
+/* Circular button for FILE 2 */
+.circular-button {
+    display: none;
+}
+
+.circular-button:hover {
+    display: none;
+}
+
+/* Hover image positioning */
+.hover-image {
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 20;
+}
+
+/* Hover description positioning */
+.hover-description {
+    position: absolute;
+    top: 50%;
+    left: 120%;
+    transform: translateY(-50%);
+    width: 250px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    padding: 15px;
+    color: rgba(255, 0, 0, 0.9);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    text-align: left;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 21;
+}
+
+/* FILE 1 specific hover positions */
+.button-container .hover-image {
+    left: -150px;
+    transform: none;
+}
+
+.button-container .hover-description {
+    left: 120%;
+}
+
+/* FILE 2 specific hover positions */
+.file2-container .hover-image {
+    right: -150px;
+    left: auto;
+    transform: none;
+}
+
+.file2-container .hover-description {
+    right: 120%;
+    left: auto;
+    text-align: right;
+}
+
+/* CLASSIFIED specific hover positions */
+.classified-container .hover-image {
+    left: -150px;
+    transform: none;
+}
+
+.classified-container .hover-description {
+    left: 120%;
+}
+
+/* Hover effects */
+.file-graphic:hover ~ .hover-image {
+    opacity: 1;
+}
+
+.file-graphic:hover ~ .hover-description {
+    opacity: 1;
+}
+
+/* File graphics */
+.file-graphic {
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 0, 0, 0.2);
+    border: 2px solid rgba(255, 0, 0, 0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    margin: 20px;
+    z-index: 5;
+}
+
+.file-icon {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.file-label {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: rgba(255, 0, 0, 0.7);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+/* FILE 1 specific styles */
+.file1 .file-icon {
+    background-image: url('images/file.png');
+}
+
+/* FILE 2 specific styles */
+.file2 .file-icon {
+    background-image: url('images/file.png');
+}
+
+/* CLASSIFIED specific styles */
+.file3 .file-icon {
+    background-image: url('images/file.png');
+}
+
+/* Hover effects */
+.file-graphic:hover {
+    background: rgba(255, 0, 0, 0.4);
+    border-color: rgba(255, 0, 0, 0.8);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.5);
+}
+
+/* Update container styles */
+.button-container, .file2-container, .classified-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 20;
+    pointer-events: auto;
+}
+
+/* FILE 1 hover image */
+.button-container .hover-image {
+    background-image: url('images/PER.webp');
+}
+
+/* FILE 2 hover image */
+.file2-container .hover-image {
+    background-image: url('images/BIKE.jpg');
+}
+
+/* CLASSIFIED hover image */
+.classified-container .hover-image {
+    background-image: url('images/pant.jpg');
+}
+
+/* Make sure hover images appear on hover */
+.file-graphic:hover ~ .hover-image {
+    opacity: 1;
+}
+
+/* Make sure hover descriptions appear on hover */
+.file-graphic:hover ~ .hover-description {
+    opacity: 1;
+}
+
+/* FILE 1 hover description */
+.button-container .hover-description {
+    content: "FILE 1: Personal performance video showcasing the artist's unique style and energy.";
+}
+
+/* FILE 2 hover description */
+.file2-container .hover-description {
+    content: "FILE 2: Behind-the-scenes footage of the artist's creative process and daily life.";
+}
+
+/* CLASSIFIED hover description */
+.classified-container .hover-description {
+    content: "CLASSIFIED: Exclusive content revealing the artist's upcoming projects and collaborations.";
+}
+
+/* Product pricing */
+.product-pricing {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    gap: 10px;
+}
+
+.original-price {
+    color: #fff;
+    text-decoration: line-through;
+    font-size: 1rem;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.product-price {
+    color: #ff0000;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+/* Product price display */
+.product-price-display {
+    margin: 20px 0;
+    padding: 10px 0;
+    border-top: 1px solid rgba(255, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.price-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ff0000;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    display: block;
+    text-align: center;
 } 

@@ -12,7 +12,7 @@
 <body>
     <header>
         <a href="index.html" class="header-logo">
-            <img src="IMAGES/HEADER.png" alt="Header Logo">
+            <img src="images/HEADER.png" alt="Header Logo">
         </a>
         <div class="header-buttons">
             <a href="STORY.html" class="story-button">STORY</a>
@@ -24,62 +24,102 @@
 
     <section class="hero">
         <div class="hero-content">
-            <img src="IMAGES/Title.png" alt="Title" class="title-image">
+            <img src="images/Title.png" alt="Title" class="title-image">
         </div>
-        <img src="IMAGES/HERO.webp" alt="Hero Image" class="hero-image">
+        <img src="images/HERO.webp" alt="Hero Image" class="hero-image">
     </section>
 
     <section class="collection">
         <h1 class="section-title">DEAD BY DAWN DROP</h1>
         <div class="product-grid">
-            <a href="product1.html" class="product-box">
-                <div class="product-price">$49.99</div>
-            </a>
-            <a href="product2.html" class="product-box">
-                <div class="product-price">$49.99</div>
-            </a>
-            <a href="product3.html" class="product-box">
-                <div class="product-price">$49.99</div>
-            </a>
+            <div class="product-box">
+                <a href="product1.html">
+                    <img src="images/S1.png" alt="Product 1">
+                </a>
+                <div class="product-price">$29.99</div>
+            </div>
+            <div class="product-box">
+                <a href="product2.html">
+                    <img src="images/S2.png" alt="Product 2">
+                </a>
+                <div class="product-price">$29.99</div>
+            </div>
         </div>
         <div class="blood-drip-bottom"></div>
     </section>
 
     <div class="blood-divider">
-        <img src="IMAGES/blood.webp" alt="Blood Drip" class="blood-drip-image">
+        <img src="images/blood.webp" alt="Blood Drip" class="blood-drip-image">
     </div>
 
     <section class="upcoming">
-        <div class="upcoming-content">
-            <h2 class="section-title">UPCOMING</h2>
-            <div class="performance-grid">
-                <div class="performance-item">
-                    <div class="performance-image">
-                        <img src="IMAGES/THEME 1.webp" alt="Theme 1" class="performance-video">
-                    </div>
-                    <div class="performance-text">
-                        <h2>PERFORMANCE</h2>
-                        <p>COMING SOON</p>
+        <div class="computer-container">
+            <div class="computer">
+                <div class="computer-screen">
+                    <div class="screen-content">
+                        <div class="desktop">
+                            <div class="taskbar">
+                                <div class="start-button">START</div>
+                                <div class="time" id="current-time">00:00</div>
+                            </div>
+                            <div class="desktop-icons">
+                                <div class="desktop-icon" data-theme="performance">
+                                    <img src="images/THEME 1.webp" alt="Performance Theme">
+                                    <span>Performance</span>
+                                </div>
+                                <div class="desktop-icon" data-theme="technology">
+                                    <img src="images/THEME 2.jpg" alt="Technology Theme">
+                                    <span>Technology</span>
+                                </div>
+                                <div class="desktop-icon" data-theme="society">
+                                    <img src="images/THEME 3.jpg" alt="Society Theme">
+                                    <span>Society</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="theme-window" id="theme-window">
+                            <div class="window-header">
+                                <span class="window-title">Theme Preview</span>
+                                <button class="close-button">×</button>
+                            </div>
+                            <div class="window-content">
+                                <img src="" alt="Theme Preview" id="theme-preview">
+                                <div class="theme-description">
+                                    <h3 id="theme-title"></h3>
+                                    <p id="theme-text"></p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="performance-item">
-                    <div class="performance-image">
-                        <img src="IMAGES/THEME 2.jpg" alt="Theme 2" class="performance-video">
-                    </div>
-                    <div class="performance-text">
-                        <h2>TECHNOLOGY</h2>
-                        <p>COMING SOON</p>
-                    </div>
+                <div class="computer-base"></div>
+            </div>
+        </div>
+        
+        <div class="floating-buttons">
+            <div class="button-container">
+                <div class="file-graphic file1">
+                    <div class="file-icon"></div>
+                    <div class="file-label">FILE 1</div>
                 </div>
-                <div class="performance-item">
-                    <div class="performance-image">
-                        <img src="IMAGES/THEME 3.jpg" alt="Theme 3" class="performance-video">
-                    </div>
-                    <div class="performance-text">
-                        <h2>SOCIETY</h2>
-                        <p>COMING SOON</p>
-                    </div>
+                <div class="hover-image"></div>
+                <div class="hover-description">PERFORMANCE EVOLUTION: From combustion engines to electric powertrains, automotive technology has revolutionized speed, efficiency, and handling. Modern vehicles achieve unprecedented acceleration while reducing emissions through advanced aerodynamics, lightweight materials, and regenerative braking systems.</div>
+            </div>
+            <div class="file2-container">
+                <div class="file-graphic file2">
+                    <div class="file-icon"></div>
+                    <div class="file-label">FILE 2</div>
                 </div>
+                <div class="hover-image"></div>
+                <div class="hover-description">BIKE PERFORMANCE: The perfect fusion of human power and mechanical precision. Modern cycling gear combines lightweight carbon frames, aerodynamic designs, and precision-engineered components to maximize efficiency. Advanced gear ratios, responsive brakes, and ergonomic positioning create the ultimate riding experience for both speed and endurance.</div>
+            </div>
+            <div class="classified-container">
+                <div class="file-graphic file3">
+                    <div class="file-icon"></div>
+                    <div class="file-label">CLASSIFIED</div>
+                </div>
+                <div class="hover-image"></div>
+                <div class="hover-description">CLASSIFIED INFORMATION: Restricted access data containing proprietary technology specifications and experimental designs. This information is for authorized personnel only and contains details on advanced propulsion systems, materials science breakthroughs, and revolutionary aerodynamic concepts.</div>
             </div>
         </div>
     </section>
@@ -99,5 +139,6 @@
     </footer>
     <script src="scroll.js"></script>
     <script src="access.js"></script>
+    <script src="computer.js"></script>
 </body>
 </html> 
