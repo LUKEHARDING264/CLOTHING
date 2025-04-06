@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Required - Eternal Clothing</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .gate-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #000000, #1a1a1a);
+            padding: 20px;
+        }
+
+        .gate-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .gate-title {
+            color: #ffffff;
+            font-size: 2em;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .gate-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .gate-input {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1em;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .gate-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .gate-button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #000000;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gate-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .gate-error {
+            color: #ff4444;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .gate-logo {
+            width: 150px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="gate-container">
+        <div class="gate-content">
+            <img src="images/logo.png" alt="Eternal Clothing Logo" class="gate-logo">
+            <h1 class="gate-title">Access Required</h1>
+            <form class="gate-form" id="gateForm">
+                <input type="password" class="gate-input" id="passcode" placeholder="Enter Passcode" required>
+                <button type="submit" class="gate-button">Enter Site</button>
+            </form>
+            <p class="gate-error" id="errorMessage">Incorrect passcode. Please try again.</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('gateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const passcode = document.getElementById('passcode').value;
+            const correctPasscode = 'eternal2024'; // Change this to your desired passcode
+            
+            if (passcode === correctPasscode) {
+                // Set a cookie to remember the user has access
+                document.cookie = "site_access=granted; path=/; max-age=86400"; // 24 hours
+                window.location.href = 'index.html';
+            } else {
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('passcode').value = '';
+            }
+        });
+
+        // Check if user already has access
+        if (document.cookie.includes('site_access=granted')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html> 
