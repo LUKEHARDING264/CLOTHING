@@ -95,6 +95,18 @@ function displayCartItems() {
 document.addEventListener('DOMContentLoaded', () => {
     updateCartCount();
     displayCartItems();
+
+    // Add checkout button functionality
+    const checkoutButton = document.querySelector('.checkout-button');
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', () => {
+            if (cart.length > 0) {
+                window.location.href = 'checkout.html';
+            } else {
+                alert('Your cart is empty');
+            }
+        });
+    }
 });
 
 // Add to cart button functionality
@@ -103,7 +115,7 @@ document.querySelectorAll('.add-to-cart-button').forEach(button => {
         const productContainer = button.closest('.product-info');
         const productId = window.location.pathname.split('/').pop().replace('.html', '');
         const name = productContainer.querySelector('.product-title').textContent;
-        const price = parseFloat(productContainer.querySelector('.product-price').textContent.replace('$', ''));
+        const price = parseFloat(productContainer.querySelector('.price-value').textContent.replace('$', ''));
         const size = productContainer.querySelector('.size-select').value;
         
         if (!size) {
