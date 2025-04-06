@@ -23,6 +23,7 @@ function addToCart(productId, name, price, size) {
     
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
+    updateCartTotal();
     showAddToCartMessage();
 }
 
@@ -30,6 +31,7 @@ function removeFromCart(productId, size) {
     cart = cart.filter(item => !(item.id === productId && item.size === size));
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
+    updateCartTotal();
     displayCartItems();
 }
 
@@ -40,6 +42,14 @@ function updateCartCount() {
         cartButton.setAttribute('data-count', cartCount);
     } else {
         cartButton.removeAttribute('data-count');
+    }
+}
+
+function updateCartTotal() {
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const totalElement = document.querySelector('.total-amount');
+    if (totalElement) {
+        totalElement.textContent = `$${total.toFixed(2)}`;
     }
 }
 
@@ -65,12 +75,11 @@ function displayCartItems() {
                 <a href="index.html#collection" class="shop-now-button">SHOP NOW</a>
             </div>
         `;
+        updateCartTotal();
         return;
     }
     
-    let total = 0;
     cartItems.innerHTML = cart.map(item => {
-        total += item.price * item.quantity;
         return `
             <div class="cart-item">
                 <div class="cart-item-details">
@@ -84,11 +93,7 @@ function displayCartItems() {
         `;
     }).join('');
     
-    // Update cart summary
-    const subtotal = document.querySelector('.summary-item:first-child span:last-child');
-    const totalElement = document.querySelector('.summary-item.total span:last-child');
-    if (subtotal) subtotal.textContent = `$${total.toFixed(2)}`;
-    if (totalElement) totalElement.textContent = `$${total.toFixed(2)}`;
+    updateCartTotal();
 }
 
 // Initialize cart count on page load
