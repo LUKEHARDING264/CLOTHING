@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Required - Eternal Clothing</title>
+    <title>Access Required - Dead By Dawn</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap">
     <style>
+        body {
+            font-family: 'Share Tech Mono', monospace;
+        }
+        
         .gate-container {
             min-height: 100vh;
             display: flex;
@@ -17,21 +22,24 @@
         }
 
         .gate-content {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #ff0000;
             padding: 40px;
-            border-radius: 20px;
+            border-radius: 5px;
             text-align: center;
             max-width: 400px;
             width: 90%;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
         }
 
         .gate-title {
-            color: #ffffff;
-            font-size: 2em;
+            color: #ff0000;
+            font-size: 1.8em;
             margin-bottom: 20px;
-            font-weight: 300;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
         }
 
         .gate-form {
@@ -42,52 +50,68 @@
 
         .gate-input {
             padding: 15px;
-            border: none;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+            border: 1px solid #ff0000;
+            border-radius: 0;
+            background: rgba(0, 0, 0, 0.5);
+            color: #ff0000;
             font-size: 1em;
             text-align: center;
+            font-family: 'Share Tech Mono', monospace;
             transition: all 0.3s ease;
         }
 
         .gate-input:focus {
             outline: none;
-            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
         }
 
         .gate-button {
             padding: 15px 30px;
-            border: none;
-            border-radius: 10px;
-            background: #ffffff;
-            color: #000000;
+            border: 1px solid #ff0000;
+            border-radius: 0;
+            background: transparent;
+            color: #ff0000;
             font-size: 1em;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-family: 'Share Tech Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .gate-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 0, 0, 0.1);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
         }
 
         .gate-error {
-            color: #ff4444;
+            color: #ff0000;
             margin-top: 10px;
             display: none;
+            font-size: 0.9em;
         }
 
         .gate-logo {
-            width: 150px;
+            width: 80%;
+            max-width: 400px;
             margin-bottom: 30px;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
         }
     </style>
 </head>
 <body>
     <div class="gate-container">
         <div class="gate-content">
-            <img src="images/logo.png" alt="Eternal Clothing Logo" class="gate-logo">
+            <img src="IMAGES/Title.png" alt="Dead By Dawn Title" class="gate-logo">
             <h1 class="gate-title">Access Required</h1>
             <form class="gate-form" id="gateForm">
                 <input type="password" class="gate-input" id="passcode" placeholder="Enter Passcode" required>
